@@ -1,0 +1,32 @@
+{
+  "type": "module",
+  "name": "desafio-7",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "mocha -w",
+    "crearTablas": "node scripts/crearTablas.js"
+  },
+  "keywords": [],
+  "author": "mongez",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.2",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.2.0",
+    "faker": "^6.6.6",
+    "firebase-admin": "^11.0.1",
+    "knex": "^2.3.0",
+    "mongodb": "^4.10.0",
+    "mongoose": "^6.6.1",
+    "mysql": "^2.18.1",
+    "normalizr": "^3.6.2",
+    "socket.io": "^4.1.3",
+    "sqlite3": "^5.0.11"
+  },
+  "devDependencies": {
+    "axios": "^0.21.1"
+  },
+  "description": ""
+}
