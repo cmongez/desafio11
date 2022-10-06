@@ -1,78 +1,52 @@
-import mongoose from 'mongoose';
-import * as objectUtils from '../utils/objectUtils.js';
-import config from '../config.js';
-import { Productos } from './models/productos.js';
+import mongoose from "mongoose";
+import * as objectUtils from "../utils/objectUtils.js";
 
-try {
-  //conexion hacia la base de datos
-  await mongoose.connect(config.mongodb.cnxStr, config.mongodb.options);
-  console.log('Base de datos conectada');
-} catch (error) {
-  console.log(error);
-}
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
 
-class ContenedorMongoDB {
-  constructor(schema) {
-    this.schema = schema;
+await mongoose.connect("mongodb://localhost:27017/testdb", options);
+
+export default class MongoDbContainer {
+  constructor(collectionString, schema) {
+    this.model = mongoose.model(collectionString, schema);
   }
 
-  async list() {
-    try {
-      const arr = await this.schema.find({});
-      const plainData = objectUtils.returnPlainObj(arr);
-      const items = plainData.map((item) =>
-        objectUtils.renameField(item, '_id', 'id')
-      );
-      return items;
-    } catch (error) {
-      console.log(error);
-    }
+  async getById(id) {
+    const data = await this.model.findOne({ _id: id });
+    const plainData = objectUtils.returnPlainObj(data);
+    const item = objectUtils.renameField(plainData, "_id", "id");
+    return item;
   }
 
-  async getById(idEl) {
-    try {
-      const el = await this.schema.findOne({ id: idEl });
-      const plainData = objectUtils.returnPlainObj(el);
-      const item = objectUtils.renameField(plainData, '_id', 'id');
-
-      return item;
-    } catch (error) {
-      console.log(error);
-    }
+  async getAll() {
+    const data = await this.model.find({});
+    const plainData = objectUtils.returnPlainObj(data);
+    const items = plainData.map((item) => objectUtils.renameField(item, "_id", "id"));
+    return items;
   }
 
-  async save(obj) {
-    try {
-      const newObj = new this.schema(obj);
-      const data = await newObj.save();
-      console.log(data);
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
+  async getByField(field, criteria) {
+    const data = await this.model.findOne().where(field).equals(criteria);
+    const plainData = objectUtils.returnPlainObj(data);
+    const item = objectUtils.renameField(plainData, "_id", "id");
+    return item;
   }
 
-  async deleteById(idEl) {
-    try {
-      const data = await this.schema.findByIdAndDelete(idEl);
-      console.log(data);
-      return 'Elemento Eliminado';
-    } catch (error) {
-      console.log(error);
-    }
+  async createNew(itemData) {
+    const newItem = await this.model.create(itemData);
   }
 
-  async changeById(idEl, obj) {
-    try {
-      const el = await this.schema.findByIdAndUpdate(idEl, obj);
-      console.log(el);
-      return 'Elemento Actualizado';
-    } catch (error) {
-      console.log(error);
-    }
+  async updateById(id, itemData) {
+    await this.model.updateOne({ _id: id }, { $set: { ...itemData } });
+  }
+
+  async deleteById(id) {
+    await this.model.deleteOne({ _id: id });
+  }
+
+  async deleteAll() {
+    await this.model.deleteMany({});
   }
 }
-// const prueba1 = new ContenedorMongoDB(Productos);
-// const getAllData = await prueba1.list();
-
-export default ContenedorMongoDB;
