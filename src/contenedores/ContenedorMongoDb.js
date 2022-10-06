@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import * as objectUtils from '../utils/objectUtils.js';
 import config from '../config.js';
 import { Productos } from './models/productos.js';
 
@@ -18,8 +19,11 @@ class ContenedorMongoDB {
   async list() {
     try {
       const arr = await this.schema.find({});
-      console.log(arr);
-      return arr;
+      const plainData = objectUtils.returnPlainObj(arr);
+      const items = plainData.map((item) =>
+        objectUtils.renameField(item, '_id', 'id')
+      );
+      return items;
     } catch (error) {
       console.log(error);
     }
@@ -28,8 +32,10 @@ class ContenedorMongoDB {
   async getById(idEl) {
     try {
       const el = await this.schema.findOne({ id: idEl });
-      console.log(el);
-      return el;
+      const plainData = objectUtils.returnPlainObj(el);
+      const item = objectUtils.renameField(plainData, '_id', 'id');
+
+      return item;
     } catch (error) {
       console.log(error);
     }
