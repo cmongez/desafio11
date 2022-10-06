@@ -3,12 +3,9 @@ import config from '../src/config.js';
 
 //------------------------------------------
 // productos en MariaDb
-
+const mariaDbClient = knex(config.mariaDb);
 try {
-  const mariaDbClient = knex(config.mariaDb);
-
   //Implementar creación de tabla
-
   await mariaDbClient.schema.dropTableIfExists('articulos');
   await mariaDbClient.schema.createTable('articulos', (table) => {
     table.increments('id').primary();
@@ -19,24 +16,9 @@ try {
 
   //Inserto elementos a modo ejemplo
   const articulos = [
-    {
-      title: 'Libro',
-      price: 150,
-      thumbnail:
-        'https://cdn3.iconfinder.com/data/icons/education-209/64/globe-earth-geograhy-planet-school-512.png',
-    },
-    {
-      title: 'Libro',
-      price: 200,
-      thumbnail:
-        'https://cdn3.iconfinder.com/data/icons/education-209/64/book-note-paper-school-512.png',
-    },
-    {
-      title: 'Manzana verde',
-      price: 10,
-      thumbnail:
-        'https://cdn3.iconfinder.com/data/icons/education-209/64/apple-fruit-science-school-512.png',
-    },
+    { title: 'Mirinda', price: 180, thumbnail: '' },
+    { title: 'Seven Up', price: 190, thumbnail: '' },
+    { title: 'Pepsi', price: 185, thumbnail: '' },
   ];
 
   await mariaDbClient('articulos').insert(articulos);
@@ -45,13 +27,15 @@ try {
 } catch (error) {
   console.log('error al crear tabla productos en mariaDb');
   console.log(error);
+} finally {
+  await mariaDbClient.destroy();
 }
 
 //------------------------------------------
 // mensajes en SQLite3
-try {
-  const sqliteClient = knex(config.sqlite3);
+const sqliteClient = knex(config.sqlite3);
 
+try {
   //Implementar creación de tabla
   await sqliteClient.schema.dropTableIfExists('mensajes');
   await sqliteClient.schema.createTable('mensajes', (table) => {
@@ -62,14 +46,11 @@ try {
   });
 
   const mensaje = [
-    { autor: 'Base de datos',
-      hora: '00:00',
-      texto: 'Bienvenidos'
-    },
+    { autor: 'Base de Datos', hora: '00:00', texto: 'BIENVENIDOS!' },
     {
-      autor: 'Admin',
+      autor: 'Administracion',
       hora: '00:00',
-      texto: 'Escribir aqui',
+      texto: 'AQUI PUEDES ESCRIBIR TUS MENSAJES',
     },
   ];
 
@@ -78,5 +59,6 @@ try {
   console.log('tabla mensajes en sqlite3 creada con éxito');
 } catch (error) {
   console.log('error al crear tabla mensajes en sqlite3');
-  console.log(error);
+} finally {
+  sqliteClient.destroy();
 }

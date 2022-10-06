@@ -1,40 +1,55 @@
 class ContenedorMemoria {
-    constructor() {
-      this.productos = [];
-    }
-  
-    list(id) {
-      let productFinder = this.productos.find((p) => p.id == id);
-      return productFinder;
-    }
-  
-    listAll() {
-      return this.productos;
-    }
-  
-    save(prod) {
-      if (this.productos.length > 0) {
-        let newLastItem = this.productos[this.productos.length - 1].id + 1;
-        prod.id = newLastItem;
-        this.productos.push(prod);
-      } else {
-        prod.id = 1;
-        this.productos.push(prod);
-      }
-    }
-  
-    update(prod, id) {
-      let productToUpdate = this.productos.findIndex((p) => p.id === id);
-  
-      this.productos[productToUpdate].title = prod.title;
-      this.productos[productToUpdate].price = prod.price;
-      this.productos[productToUpdate].thumbnail = prod.thumbnail;
-    }
-  
-    delete(id) {
-      let productToDelete = this.productos.findIndex((p) => p.id === id);
-      this.productos.splice(productToDelete, 1);
+  constructor() {
+    (this.productos = []), (this.id = 1);
+  }
+
+  save(obj) {
+    try {
+      obj.id = this.id;
+      this.productos = [...this.productos, obj];
+      this.id++;
+    } catch (error) {
+      console.log('error en Save');
     }
   }
-  
-  module.exports = ContenedorMemoria;
+
+  getById(id) {
+    try {
+      const producto = this.getAll();
+      const productsById = producto.find((p) => p.id == id);
+      return productsById;
+    } catch (error) {
+      console.log('error en getById');
+    }
+  }
+
+  getAll() {
+    try {
+      console.log(JSON.stringify(this.productos));
+      return JSON.parse(JSON.stringify(this.productos));
+    } catch (error) {
+      console.log('error en GetAll');
+    }
+  }
+
+  update(prod, id) {
+    try {
+      prod.id = id;
+      this.productos[id - 1] = prod;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  deleteById(id) {
+    try {
+      const producto = this.getAll();
+      const productsById = producto.filter((p) => p.id != id);
+      this.productos = productsById;
+    } catch (error) {
+      console.log('error en deleteById');
+    }
+  }
+}
+
+export default ContenedorMemoria;
