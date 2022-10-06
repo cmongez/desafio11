@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import express from 'express';
 import { Server as HttpServer } from 'http';
 import { Server as Socket } from 'socket.io';
@@ -89,12 +88,3 @@ const connectedServer = httpServer.listen(PORT, () => {
 connectedServer.on('error', (error) =>
   console.log(`Error en servidor ${error}`)
 );
-=======
-import app from './server.js';
-
-const PORT = 8080;
-const server = app.listen(PORT, () => {
-  console.log(`Servidor http escuchando en el puerto ${server.address().port}`);
-});
-server.on('error', (error) => console.log(`Error en servidor ${error}`));
->>>>>>> aac81ac4188a13b01de89c6bd4aa83e6bbfb8663
