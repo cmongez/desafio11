@@ -6,7 +6,15 @@ class ContenedorArchivo {
   constructor() {
     this.nombreArchivo = 'archivos';
   }
-
+  async getById(id) {
+    try {
+      const producto = await this.getAll();
+      const productsById = producto.find((p) => p.id === id);
+      return productsById;
+    } catch (error) {
+      console.log('error en getById');
+    }
+  }
   async save(obj) {
     try {
       array = await this.getAll();
@@ -17,16 +25,6 @@ class ContenedorArchivo {
       );
     } catch (error) {
       console.log('error en Save');
-    }
-  }
-
-  async getById(id) {
-    try {
-      const producto = await this.getAll();
-      const productsById = producto.find((p) => p.id === id);
-      return productsById;
-    } catch (error) {
-      console.log('error en getById');
     }
   }
 

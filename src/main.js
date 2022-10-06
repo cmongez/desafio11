@@ -38,7 +38,6 @@ const processMsgData = (msgData) => {
 };
 
 io.on('connection', async (socket) => {
-  // apenas se genera la conexión tengo que cargar mensajes y productos
   const productos = await productosApi.getAll();
   io.sockets.emit('productos', productos);
   const msgData = await mensajesApi.getAll();
@@ -46,14 +45,13 @@ io.on('connection', async (socket) => {
   io.sockets.emit('mensajes', mensajes);
 
   console.log('Nueva conexion');
-  // cuando llega un producto nuevo grabo, obtengo data, hago emit
+
   socket.on('newProduct', async (data) => {
     await productosApi.save(data);
     const productos = await productosApi.getAll();
     io.sockets.emit('productos', productos);
   });
 
-  // cuando llega un producto nuevo grabo, obtengo data, hago emit
   socket.on('newMessage', async (data) => {
     await mensajesApi.createNew(data);
     const msgData = await mensajesApi.getAll();
