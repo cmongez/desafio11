@@ -43,7 +43,7 @@ try {
 
   console.log('tabla productos en mariaDb creada con éxito');
 } catch (error) {
-  console.log('error al crear tabla productos en mariaDb');
+  console.log('Error al crear tabla productos en mariaDb');
   console.log(error);
 }
 
